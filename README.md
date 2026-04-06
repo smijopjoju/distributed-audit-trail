@@ -52,7 +52,7 @@ npm test
 ```
 
 ## 📊 Performance Testing
-The project includes a load-testing suite to verify the **5,000 RPS** requirement and **<95ms P99** latency SLA.
+The project includes a load-testing suite to verify the **5,000 RPS** requirement and **<110ms P99** latency SLA.
 
 ### Running the Load Test
 The performance script automatically handles starting and stopping the audit server in both Baseline and Audited modes. **Do not run the audit server manually before starting this test.**
@@ -75,7 +75,7 @@ Under a target load of **5,000 RPS**, the reference implementation yields the fo
 
 **Analysis:**
 - **Fail-Closed Logic**: The 171 non-2xx responses in the Audited test are expected; they represent requests blocked by the `AuditInterceptor` when the `MockKinesisProducer` simulated a network failure (0.1% failure rate), ensuring forensic integrity.
-- **Latency SLA**: The P99 latency of 59ms is well within the **75ms – 95ms** target range for P99 "Tail Latency" in a production Kinesis environment.
+- **Latency SLA**: The P99 latency of 59ms is well within the **75ms – 110ms** target range for P99 "Tail Latency" in a production Kinesis environment.
 
 **Test Parameters:**
 - **Duration:** 5 Minutes (300s) per test.

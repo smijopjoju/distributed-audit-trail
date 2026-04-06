@@ -32,7 +32,7 @@ The system is designed for high-concurrency environments using an **N+1 stateles
 | :--- | :--- | :--- | :--- |
 | **$P50$ (Median)** | 18ms – 22ms | High | Typical network round-trip + 1ms processing. |
 | **$P95$** | 35ms – 45ms | High | Includes minor cross-AZ jitter. |
-| **$P99$** | 75ms – 95ms | Medium | The "Tail Latency" caused by Kinesis 3-AZ replication. |
+| **$P99$** | 75ms – 110ms | Medium | The "Tail Latency" caused by Kinesis 3-AZ replication. |
 
 - **Horizontal Scaling:** Deployed on AWS ECS Fargate, the fleet scales based on throughput, ensuring the audit trail does not become a bottleneck.
 
