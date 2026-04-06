@@ -1,0 +1,27 @@
+flowchart LR
+ subgraph subGraph0["Extraction Layer (audit-service)"]
+        Interceptor["GraphQL Interceptor<br>(TS Middleware)"]
+        GraphQL["GraphQL API"]
+        Kinesis{"Amazon Kinesis<br>Stream"}
+  end
+ subgraph subGraph2["Processing Layer (PII Filter)"]
+        Lambda["Anonymization Consumer<br>(AWS Lambda/Data Firehose)"]
+        S3[("Amazon S3<br>Object Lock / WORM")]
+  end
+ subgraph subGraph4["Analysis & Alerting"]
+        Athena["Amazon Athena<br>(SQL Queries)"]
+        SOC["SOC Team / Security Alerts"]
+  end
+    User(("User/Client")) --> GraphQL
+    GraphQL --> Interceptor
+    Interceptor -- Extract Metadata,<br>JWT, IDs --> Kinesis
+    Kinesis --> Lambda
+    Lambda -- "Strip/Anonymize PII<br>Allow-list Strategy" --> S3
+    S3 --> Athena
+    Athena --> SOC
+
+    style Interceptor fill:#f9f,stroke:#333,stroke-width:2px
+    style Kinesis fill:#ff9,stroke:#333,stroke-width:2px
+    style Lambda fill:#bbf,stroke:#333,stroke-width:2px
+    style S3 fill:#dfd,stroke:#333,stroke-width:2px
+    style Athena fill:#fdd,stroke:#333,stroke-width:2px
