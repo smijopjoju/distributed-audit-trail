@@ -51,6 +51,24 @@ cd audit-service
 npm test
 ```
 
+## 📊 Performance Testing
+The project includes a load-testing suite to verify the **5,000 RPS** requirement and **<50ms P99** latency SLA.
+
+### Running the Load Test
+The performance script automatically handles starting and stopping the audit server in both Baseline and Audited modes. **Do not run the audit server manually before starting this test.**
+
+```bash
+cd performance
+npm install
+npm run test:perf
+```
+
+**Test Parameters:**
+- **Duration:** 5 Minutes (300s) per test.
+- **Target RPS:** 5,000 (~1.5 Million requests total).
+- **Metric Captured:** P95 and P99 latency comparison.
+- **Fail-Closed Verification:** Ensures that synchronous auditing does not exceed the 50ms budget.
+
 ## 🛡️ Core Security Features
 - **Fail-Closed Strategy**: If auditing fails (e.g., Kinesis timeout), the request is blocked with a 500 error to ensure forensic integrity.
 - **PII Redaction**: An automated allow-list approach ensures only approved GraphQL arguments are logged. Everything else is masked as `[REDACTED]`.
