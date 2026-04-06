@@ -98,7 +98,6 @@ async function main() {
     console.log('-------------------------');
     console.log(`Metric      | Baseline   | Audited    | Delta %`);
     console.log(`Req/Sec     | ${bReq.toFixed(0).padEnd(10)} | ${aReq.toFixed(0).padEnd(10)} | ${bReq ? ((aReq / bReq - 1) * 100).toFixed(2) : 0}%`);
-    console.log(`P95 Latency | ${bLatency.p95?.toFixed(2).padEnd(10)} | ${aLatency.p95?.toFixed(2).padEnd(10)} | ${bLatency.p95 ? ((aLatency.p95 / bLatency.p95 - 1) * 100).toFixed(2) : 0}%`);
     console.log(`P99 Latency | ${bLatency.p99?.toFixed(2).padEnd(10)} | ${aLatency.p99?.toFixed(2).padEnd(10)} | ${bLatency.p99 ? ((aLatency.p99 / bLatency.p99 - 1) * 100).toFixed(2) : 0}%`);
 
     if (aLatency.p99 < 110) {
