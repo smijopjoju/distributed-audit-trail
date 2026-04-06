@@ -20,7 +20,8 @@ async function runTest(name: string, disableAudit: boolean) {
   fs.appendFileSync(LOG_FILE, `\n\n--- STARTING TEST: ${name} ---\n`);
 
   // 1. Start the server in a subprocess
-  const server = spawn('npm', ['start'], {
+  // Using direct ts-node call instead of npm start to avoid shell pipe issues on Windows
+  const server = spawn('npx', ['ts-node', path.resolve(__dirname, '../audit-service/src/index.ts')], {
     cwd: path.resolve(__dirname, '../audit-service'),
     env: { ...process.env, DISABLE_AUDIT: String(disableAudit), PORT: '3000', NODE_ENV: 'test' },
     shell: true
@@ -63,6 +64,7 @@ async function runTest(name: string, disableAudit: boolean) {
     server.kill();
   }
 
+  logStream.end();
   return result;
 }
 

@@ -36,7 +36,7 @@ export class MockKinesisProducer implements IAuditProducer {
 
         if (!isSpike) {
           // Log only spikes or failures to keep the perf-test output clean
-          // console.log(`[MOCK_KINESIS_ACK] ${latency}ms`);
+           console.log(`[MOCK_KINESIS_ACK] ${latency}ms`);
         } else {
           console.warn(`[MOCK_KINESIS_SPIKE] ${latency}ms (Triggers Timeout)`);
         }
