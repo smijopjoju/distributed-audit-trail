@@ -41,3 +41,15 @@ The system is designed for high-concurrency environments using an **N+1 stateles
 ├── performance/            # Load testing scripts (k6/Autocannon) & Reports
 └── docs/                   # AI Usage Disclosure & Forensic Strategy
 ```
+
+## 💰 Cost Efficiency (AWS eu-central-1)
+Calculated for **100 million requests/day** with an average event size of 1 KB (~100 GB/day).
+
+| Service | Basis of Calculation | Est. Daily Cost |
+| :--- | :--- | :--- |
+| **Amazon Kinesis** | 6 Shards ($0.0179/hr) + 100M PUT Units ($0.0165/1M) | $4.23 |
+| **Amazon Data Firehose** | Data ingestion and processing ($0.031/GB) | $3.10 |
+| **AWS Lambda** | ~200k batched invocations + duration (128MB RAM) | $0.35 |
+| **Amazon S3** | 100 GB storage + PUT requests + Object Lock overhead | $0.12 |
+| **Amazon Athena** | SOC query scans (~100GB scanned daily at $5/TB) | $0.50 |
+| **Total** | **Daily Operational Base Cost** | **~$8.30** |
