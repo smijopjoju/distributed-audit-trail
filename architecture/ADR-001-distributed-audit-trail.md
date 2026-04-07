@@ -26,7 +26,14 @@ Our architecture satisfies GDPR requirements through **Identity Dissociation**:
 
 ## 🚀 Performance & Scalability
 The system is designed for high-concurrency environments using an **N+1 stateless architecture**.
-- **Latency Budget:** We target a P95 < 25ms and P99 < 50ms for the logging round-trip.
+- **Latency Budget:** These figures represent the added latency to every GraphQL request:
+
+| Metric | Target (ms) | Confidence | Technical Context |
+| :--- | :--- | :--- | :--- |
+| **$P50$ (Median)** | 18ms – 22ms | High | Typical network round-trip + 1ms processing. |
+| **$P95$** | 35ms – 45ms | High | Includes minor cross-AZ jitter. |
+| **$P99$** | 75ms – 110ms | Medium | The "Tail Latency" caused by Kinesis 3-AZ replication. |
+
 - **Horizontal Scaling:** Deployed on AWS ECS Fargate, the fleet scales based on throughput, ensuring the audit trail does not become a bottleneck.
 
 ## 📂 Project Structure
