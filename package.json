@@ -1,0 +1,7 @@
+{
+  "devDependencies": {
+    "@types/node": "^25.5.2",
+    "autocannon": "^8.0.0",
+    "ts-node": "^10.9.2"
+  }
+}

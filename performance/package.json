@@ -1,0 +1,25 @@
+{
+  "name": "performance",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:perf": "ts-node load-test.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@types/autocannon": "^7.12.7",
+    "@types/node": "^25.5.2",
+    "autocannon": "^8.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.2"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10"
+  }
+}
