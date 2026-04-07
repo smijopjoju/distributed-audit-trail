@@ -3,20 +3,29 @@ import { IAuditProducer } from "./IAuditProducer";
 
 /**
  * Mock Implementation of Kinesis Producer.
- * Simulates network latency and occasional failures to test
- * the "Fail-Closed" and "50ms Timeout" logic without AWS credentials.
+ * Aligned with production AWS Kinesis PutRecord performance:
+ * - P50 (Audit-only): ~20ms
+ * - P95 (Audit-only): ~40ms
+ * - P99 (Audit-only): ~80ms (Tail Latency caused by Kinesis 3-AZ replication)
  */
 export class MockKinesisProducer implements IAuditProducer {
-  private readonly MIN_LATENCY = 10;
-  private readonly MAX_LATENCY = 100; // Intentionally exceeds 50ms sometimes
-  private readonly FAILURE_RATE = 0.05; // 5% chance of random network failure
+  private readonly NORMAL_MIN = 10;
+  private readonly NORMAL_MAX = 45; // Median ~27ms, P95 ~43ms
+  private readonly SPIKE_MIN = 75;
+  private readonly SPIKE_MAX = 95;
+  private readonly SPIKE_CHANCE = 0.01; // 1% chance ensures P99 lands in the 75-95ms range
+  private readonly FAILURE_RATE = 0.001; // 0.1% chance of random network failure
 
   public async publish(event: AuditEvent): Promise<void> {
-    // 1. Validate Schema (same as production)
+    // 1. Validate Schema
     AuditEventSchema.parse(event);
 
-    // 2. Simulate Network Latency
-    const latency = Math.floor(Math.random() * (this.MAX_LATENCY - this.MIN_LATENCY + 1) + this.MIN_LATENCY);
+    // 2. Determine Latency (Normal vs Spike)
+    const isSpike = Math.random() < this.SPIKE_CHANCE;
+    const min = isSpike ? this.SPIKE_MIN : this.NORMAL_MIN;
+    const max = isSpike ? this.SPIKE_MAX : this.NORMAL_MAX;
+    
+    const latency = Math.floor(Math.random() * (max - min + 1) + min);
     
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -25,7 +34,13 @@ export class MockKinesisProducer implements IAuditProducer {
           return reject(new Error("Mock Network Error: Connection reset by peer"));
         }
 
-        console.log(`[MOCK_KINESIS_ACK] Event published in ${latency}ms (UserID: ${event.userId})`);
+        if (!isSpike) {
+          // Log only spikes or failures to keep the perf-test output clean
+           console.log(`[MOCK_KINESIS_ACK] ${latency}ms`);
+        } else {
+          console.warn(`[MOCK_KINESIS_SPIKE] ${latency}ms (Triggers Timeout)`);
+        }
+        
         resolve();
       }, latency);
     });
